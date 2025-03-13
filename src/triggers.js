@@ -769,6 +769,11 @@ async function builtInTriggerValidator(options, request, auth) {
         if (opt.required) {
           requiredParam(key);
         }
+        if (opt.readonly && request.original) {
+          if (request.original.get(key) !== request.object.get(key)) {
+            throw `Validation failed. Field ${key} is readonly`;
+          }
+        }
         const optional = !opt.required && val === undefined;
         if (!optional) {
           if (opt.type) {
